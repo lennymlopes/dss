@@ -20,14 +20,14 @@ test('throw error if token but no url', async () => {
   await expect(async () => {
     const dss = new Server()
     await dss.connect({ appToken: process.env.DSS_TOKEN })
-  }).rejects.toThrow('Please provide a valid token or password.')
+  }).rejects.toThrow('Please provide a valid url.')
 })
 
 test('throw error if password but no url', async () => {
   await expect(async () => {
     const dss = new Server()
     await dss.connect({ password: 'dssadmin' })
-  }).rejects.toThrow('Please provide a valid token or password.')
+  }).rejects.toThrow('Please provide a valid url.')
 })
 
 // test('checks stuff', async () => {

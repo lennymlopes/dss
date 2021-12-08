@@ -31,7 +31,7 @@ import zone from './zone.js'
 
 export default class Server {
 
-  constructor({url, appToken=null, password=null}={}) {
+  constructor({url, appToken, password}={}) {
     this.url = url
     this.appToken = appToken
     this.password = password
@@ -41,7 +41,10 @@ export default class Server {
   /**
    * connect to a dss with either password or token
    */
-  connect = async () => {
+  async connect () {
+    console.log(this)
+    console.log(this.url, this.appToken, this.password)
+
     if(!this.url) {
       throw new Error('Please provide a valid url.')
     }
