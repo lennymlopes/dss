@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got'
 const options = { https: { rejectUnauthorized: false } }
 
 /**
@@ -34,7 +34,7 @@ const setState = async (url, token, name, value, addon = undefined) => {
   }
 }
 
-module.exports = {
+export default {
   getState,
   setState
 }

@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got'
 const options = { https: { rejectUnauthorized: false } }
 
 /**
@@ -31,7 +31,7 @@ const setValue = async (url, token, dsid, value) => {
   return await got(urlString, options).json()
 }
 
-module.exports = {
+export default {
   callScene,
   setValue
 }

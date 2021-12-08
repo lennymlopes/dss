@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got'
 const options = { https: { rejectUnauthorized: false } }
 
 /**
@@ -20,6 +20,6 @@ const callScene = async (url, token, id, sceneNumber, groupID = undefined, group
   return await got(urlString, options).json()
 }
 
-module.exports = {
+export default {
   callScene
 }

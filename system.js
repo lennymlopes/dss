@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got'
 const options = { https: { rejectUnauthorized: false } }
 
 // -- auth ----------------------------------------------------------------------
@@ -68,7 +68,7 @@ const loginApplication = async (url, token) => {
   return response.result.token
 }
 
-module.exports = {
+export default {
   loginUser,
   logoutUser,
   getToken,

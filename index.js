@@ -1,8 +1,8 @@
-const apartment = require('./apartment')
-const device = require('./device')
-const system = require('./system')
-const state = require('./state')
-const zone = require('./zone')
+import apartment from './apartment.js'
+import device from './device.js'
+import system from './system.js'
+import state from './state.js'
+import zone from './zone.js'
 
 const dss = async (options={}) => {
   let sessionToken = undefined
@@ -27,4 +27,4 @@ const dss = async (options={}) => {
   }
 }
 
-module.exports = dss
+export default dss

@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got'
 const options = { https: { rejectUnauthorized: false } }
 
 /**
@@ -80,7 +80,7 @@ const setGroupValue = async (url, token, value, groupID = undefined, groupName =
   return response.data
 }
 
-module.exports = {
+export default {
   callScene,
   undoScene,
   getStructure,
