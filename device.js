@@ -26,7 +26,7 @@ const callScene = async (url, token, dsid, sceneNumber, force = undefined) => {
  */
 
 const setValue = async (url, token, dsid, value) => {
-  let urlString = `${url}/json/device/callScene?token=${token}&dsid=${dsid}&value=${value}`
+  const urlString = `${url}/json/device/callScene?token=${token}&dsid=${dsid}&value=${value}`
 
   return await got(urlString, options).json()
 }

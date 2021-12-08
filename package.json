@@ -4,7 +4,7 @@
   "description": "interact with digitalSTROM server",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest"
   },
   "type": "module",
   "author": "lennymlopes",
