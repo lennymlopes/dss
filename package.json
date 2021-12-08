@@ -1,0 +1,19 @@
+{
+  "name": "dss",
+  "version": "1.0.0",
+  "description": "interact with digitalSTROM server",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "lennymlopes",
+  "license": "ISC",
+  "dependencies": {
+    "got": "^11.8.3"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "jest": "^27.4.3",
+    "standard": "^16.0.4"
+  }
+}
