@@ -42,14 +42,15 @@ export default class Server {
 
   /**
    * apartment functions
+   * @exports dss/apartment
    * @namespace apartment
-   * @method apartment
    */
+
   apartment = {
     /**
      * returns apartment name
      * @memberof apartment
-     * @method apartment/getName
+     * @method getName
      */ 
     getName: async () => {
       let urlString= `${this.url}/json/apartment/getName?token=${this.sessionToken}`
@@ -75,7 +76,8 @@ export default class Server {
     },
     /**
      * undoes a apartment scene
-     * @param {string} url - server address
+     * @memberof apartment
+     * @method undoScene
      * @param {number} sceneNumber - scene number
      * @param {number} [groupID] - group id
      * @param {string} [groupName] - group name
@@ -89,7 +91,8 @@ export default class Server {
     /**
      * returns apartment structure,
      * includes detailed information about all zones, groups and devices.
-     * @param {string} url - server address
+     * @memberof apartment
+     * @method getStructure
      */
     getStructure: async () => {
       let urlString = `${this.url}/json/apartment/getStructure?token=${this.sessionToken}`
@@ -98,7 +101,8 @@ export default class Server {
     },
     /**
      * returns all devices,
-     * @param {string} url - server address
+     * @memberof apartment
+     * @method getDevices
      */
     getDevices: async () => {
       let urlString = `${this.url}/json/apartment/getDevices?token=${this.sessionToken}`
@@ -107,7 +111,8 @@ export default class Server {
     },
     /**
      * sets output value of all devices of a specified group (not recommended)
-     * @param {string} url - server address
+     * @memberof system
+     * @method setGroupValue
      * @param {number} value - numerical value
      * @param {number} groupID - group id
      * @param {string} groupName - group name
@@ -123,10 +128,17 @@ export default class Server {
 
   }
 
+  /**
+   * zone functions
+   * @exports dss/zone
+   * @namespace zone
+   */
+
   zone = {
     /**
      * calls a apartment scene
-     * @param {string} url - server address
+     * @memberof zone
+     * @method callScene
      * @param {number} id - zone id
      * @param {number} sceneNumber - scene number
      * @param {number} [groupID] - group id
@@ -142,24 +154,34 @@ export default class Server {
     }
   }
 
+  /**
+   * system functions
+   * @exports dss/system
+   * @namespace system
+   */
+
   system = {
     /**
      * creates a new session with user credentials
      * returns session token
+     * @memberof system
+     * @method loginUser
      * @param {string} url - server address
      * @param {string} passwort - user password
      * @param {string} user - user name, default is dssadmin
      */
 
     loginUser: async (password, user = 'dssadmin') => {
-      let urlString = `${this.url}/json/system/login?user=${user}&password=${password}`
+      let urlString = `${this.url}/json/system/login?user=${user}`
+      urlString += `&password=${password}`
       const response = await this.get(urlString)
       return response.result.token
     },
 
     /**
      * destroys session, logs out user
-     * @param {string} url - server address
+     * @memberof system
+     * @method logoutUser
      */
 
     logoutUser: async () => {
@@ -170,7 +192,8 @@ export default class Server {
      * get application token for login without authentification
      * caller must not be logged in
      * token needs to be approved by user
-     * @param {string} url - server address
+     * @memberof system
+     * @method getToken
      * @param {string} name - application name
      */
 
@@ -183,8 +206,8 @@ export default class Server {
     /**
      * enable application token
      * caller must be logged in
-     * @param {string} url - server address
-     * @param {string} token - application token
+     * @memberof system
+     * @method enableToken
      */
 
     enableToken: async () => {
@@ -194,8 +217,8 @@ export default class Server {
     /**
      * revoke application token
      * caller must be logged in
-     * @param {string} url - server address
-     * @param {string} token - application token
+     * @memberof system
+     * @method revokeToken
      */
 
     revokeToken: async () => {
@@ -204,8 +227,8 @@ export default class Server {
 
     /**
      * create new session with application token
-     * @param {string} url - server address
-     * @param {string} token - application token
+     * @memberof system
+     * @method loginApplication
      */
 
     loginApplication: async () => {
@@ -215,10 +238,18 @@ export default class Server {
     }   
   }
 
+
+  /**
+   * state functions
+   * @exports dss/state
+   * @namespace state
+   */
+
   state = {
     /**
      * get system state
-     * @param {string} url - server address
+     * @memberof state
+     * @method getState
      * @param {string} name - state identifier
      * @param {string} [addon] - owner of state, e.g.system-addon-user-defined-states
      */
@@ -232,7 +263,8 @@ export default class Server {
 
     /**
      * set system state
-     * @param {string} url - server address
+     * @memberof state
+     * @method setState
      * @param {string} name - state identifier
      * @param {string} value - new value
      * @param {string} [addon] - owner of state, e.g.system-addon-user-defined-states
@@ -249,11 +281,18 @@ export default class Server {
     }
   }
 
+
+  /**
+   * device functions
+   * @exports dss/device
+   * @namespace device
+   */
+
   device = {
     /**
      * calls a device scene
-     * @param {string} url - server address
-     * @param {string} token - session token
+     * @memberof device
+     * @method callScene
      * @param {string} dsid - device digitalstrom id
      * @param {number} sceneNumber - scene number
      * @param {boolean} [force] - issue forced scene call
@@ -268,8 +307,8 @@ export default class Server {
 
     /**
      * sets device value
-     * @param {string} url - server address
-     * @param {string} token - session token
+     * @memberof device
+     * @method setValue
      * @param {string} dsid - device digitalstrom id
      * @param {number} value - numerical 8 bit value (0-255)
      */

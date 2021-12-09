@@ -39,7 +39,7 @@ test('get apartment name', async () => {
     expect(name).toBe('dSS')
 })
 
-test('call apartment scene', async () => {
+test('call zone scene', async () => {
   const dss = new Server()
     console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
     expect(await dss.zone.callScene(10,17)).toHaveProperty('ok', true)
