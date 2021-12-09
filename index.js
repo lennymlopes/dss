@@ -217,4 +217,37 @@ export default class Server {
     }   
   }
 
+  state = {
+    /**
+     * get system state
+     * @param {string} url - server address
+     * @param {string} name - state identifier
+     * @param {string} [addon] - owner of state, e.g.system-addon-user-defined-states
+     */
+
+    getState: async (name, addon = undefined) => {
+      const urlString = `${this.url}/json/state/get?token=${this.sessionToken}&name=${name}`
+      // urlString = addon ? urlString += `&addon=${addon}` : urlString
+      const response = await get(urlString)
+      return response.result.value
+    }
+
+    /**
+     * set system state
+     * @param {string} url - server address
+     * @param {string} name - state identifier
+     * @param {string} value - new value
+     * @param {string} [addon] - owner of state, e.g.system-addon-user-defined-states
+     */
+
+    setState: async (name, value, addon = undefined) => {
+      let urlString = `${this.url}/json/state/set?name=${name}&value=${value}&token=${this.sessionToken}`
+      urlString = addon ? urlString += `&addon=${addon}` : urlString
+      try {
+        return await get(urlString)
+      } catch (e) {
+        return e
+      }
+  }
+
 }
