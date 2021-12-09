@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import Server from './index.js'
+import Server from '../src/index.js'
 dotenv.config()
 
 
