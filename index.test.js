@@ -2,6 +2,8 @@ import dotenv from 'dotenv'
 import Server from './index.js'
 dotenv.config()
 
+
+
 test('throw error if url param is missing', async () => {
   await expect(async () => {
     const dss = new Server()
@@ -30,7 +32,24 @@ test('throw error if password but no url', async () => {
   }).rejects.toThrow('Please provide a valid url.')
 })
 
-// test('checks stuff', async () => {
-//   expect(await dss({url: process.env.DSS_URL, token: process.env.DSS_TOKEN}))
-//   .toHaveProperty('apartment')
-// })
+test('get apartment name', async () => {
+  const dss = new Server()
+    console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+    let name = await dss.apartment.getName()
+    expect(name).toBe('dSS')
+})
+
+test('call apartment scene', async () => {
+  const dss = new Server()
+    console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+    expect(await dss.zone.callScene(10,17)).toHaveProperty('ok', true)
+})
+
+test('call apartment scene', async () => {
+  const dss = new Server()
+    console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+    expect(await dss.apartment.callScene(72)).toHaveProperty('ok', true)
+})
+
+
+
