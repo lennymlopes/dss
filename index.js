@@ -4,46 +4,23 @@ import system from './system.js'
 import state from './state.js'
 import zone from './zone.js'
 
-// const dss = async (options={}) => {
-//   let sessionToken = undefined
-//   if(!options.hasOwnProperty('url')) {
-//     throw new Error('Please provide a valid url.')
-//   }
-//   if( options.token ) {
-//     console.log('token')
-//     sessionToken = await system.loginApplication(options.url, options.token)
-//     console.log(sessionToken)
-//     console.log(await apartment.getName(options.url, sessionToken))
-//   } else if ( options.password) {
-//     console.log('password')
-//     sessionToken = await system.loginUser(options.url, options.password)
-//     console.log(await apartment.getName(options.url, sessionToken))
-//   } else {
-//     throw new Error("Please provide a valid token or password.")
-//   }
-
-//   return {
-//     apartment
-//   }
-// }
-
-// export default dss
-
 export default class Server {
 
-  constructor({url, appToken, password}={}) {
-    this.url = url
-    this.appToken = appToken
-    this.password = password
+  constructor() {
+    this.url = undefined
+    this.appToken = undefined
+    this.password = undefined
     this.sessionToken = undefined
   }
 
   /**
    * connect to a dss with either password or token
    */
-  async connect () {
-    console.log(this)
-    console.log(this.url, this.appToken, this.password)
+  async connect ({url=null, appToken=null, password=null}={}) {
+    
+    this.url = url
+    this.appToken = appToken
+    this.password = password
 
     if(!this.url) {
       throw new Error('Please provide a valid url.')
