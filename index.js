@@ -1,5 +1,3 @@
-import device from './device.js'
-import state from './state.js'
 import got from 'got'
 
 export default class Server {
@@ -230,7 +228,7 @@ export default class Server {
       // urlString = addon ? urlString += `&addon=${addon}` : urlString
       const response = await get(urlString)
       return response.result.value
-    }
+    },
 
     /**
      * set system state
@@ -248,6 +246,39 @@ export default class Server {
       } catch (e) {
         return e
       }
+    }
+  }
+
+  device = {
+    /**
+     * calls a device scene
+     * @param {string} url - server address
+     * @param {string} token - session token
+     * @param {string} dsid - device digitalstrom id
+     * @param {number} sceneNumber - scene number
+     * @param {boolean} [force] - issue forced scene call
+     */
+
+    callScene: async (dsid, sceneNumber, force = undefined) => {
+      let urlString = `${this.url}/json/device/callScene?token=${this.sessionToken}&dsid=${dsid}&sceneNumber=${sceneNumber}`
+      urlString = force ? urlString += `&force=${force}` : urlString
+
+      return await get(urlString)
+    },
+
+    /**
+     * sets device value
+     * @param {string} url - server address
+     * @param {string} token - session token
+     * @param {string} dsid - device digitalstrom id
+     * @param {number} value - numerical 8 bit value (0-255)
+     */
+
+    setValue: async (dsid, value) => {
+      const urlString = `${this.url}/json/device/callScene?token=${this.sessionToken}&dsid=${dsid}&value=${value}`
+
+      return await get(urlString)
+    }
   }
 
 }
