@@ -1,9 +1,5 @@
-import apartment from './apartment.js'
 import device from './device.js'
-import system from './system.js'
 import state from './state.js'
-import zone from './zone.js'
-
 import got from 'got'
 
 export default class Server {
@@ -29,9 +25,9 @@ export default class Server {
     }
 
     if( this.appToken ) {
-      this.sessionToken = await system.loginApplication(this.url, this.appToken)
+      this.sessionToken = await this.system.loginApplication()
     } else if ( this.password) {
-      this.sessionToken = await system.loginUser(this.url, this.password)
+      this.sessionToken = await this.system.loginUser(this.password)
     } else {
       throw new Error("Please provide a valid token or password.")
     }
@@ -59,7 +55,7 @@ export default class Server {
      */ 
     getName: async () => {
       let urlString= `${this.url}/json/apartment/getName?token=${this.sessionToken}`
-      const response = this.get(urlString)
+      const response = await this.get(urlString)
       return response.result.name
     },
     /**
@@ -148,13 +144,77 @@ export default class Server {
     }
   }
 
+  system = {
+    /**
+     * creates a new session with user credentials
+     * returns session token
+     * @param {string} url - server address
+     * @param {string} passwort - user password
+     * @param {string} user - user name, default is dssadmin
+     */
 
+    loginUser: async (password, user = 'dssadmin') => {
+      let urlString = `${this.url}/json/system/login?user=${user}&password=${password}`
+      const response = await this.get(urlString)
+      return response.result.token
+    },
 
+    /**
+     * destroys session, logs out user
+     * @param {string} url - server address
+     */
 
+    logoutUser: async () => {
+      this.get(`${this.url}/json/system/logout`)
+    },
 
+    /**
+     * get application token for login without authentification
+     * caller must not be logged in
+     * token needs to be approved by user
+     * @param {string} url - server address
+     * @param {string} name - application name
+     */
 
+    getToken: async name => {
+      let urlString = `${this.url}/json/system/requestApplicationToken?applicationName=${name}`
+      const response = await this.get(urlString)
+      return response.result.applicationToken
+    },
 
+    /**
+     * enable application token
+     * caller must be logged in
+     * @param {string} url - server address
+     * @param {string} token - application token
+     */
 
-  
+    enableToken: async () => {
+      return await this.get(`${this.url}/json/system/enableToken?applicationToken=${this.appToken}&token=${this.sessionToken}`)
+    },
+
+    /**
+     * revoke application token
+     * caller must be logged in
+     * @param {string} url - server address
+     * @param {string} token - application token
+     */
+
+    revokeToken: async () => {
+      return await this.get(`${this.url}/json/system/revokeToken?applicationToken=${this.sessionToken}`)
+    },
+
+    /**
+     * create new session with application token
+     * @param {string} url - server address
+     * @param {string} token - application token
+     */
+
+    loginApplication: async () => {
+      let urlString = `${this.url}/json/system/loginApplication?loginToken=${this.appToken}`
+      const response = await this.get(urlString)
+      return response.result.token
+    }   
+  }
 
 }
