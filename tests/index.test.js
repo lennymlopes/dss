@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 const Server = require('../src/index.js')
 dotenv.config()
 
-
+jest.setTimeout(20000)
 
 test('throw error if url param is missing', async () => {
   await expect(async () => {
@@ -51,5 +51,19 @@ test('call apartment scene', async () => {
     expect(await dss.apartment.callScene(72)).toHaveProperty('ok', true)
 })
 
+
+
+// test('get all devices', async () => {
+//   const dss = new Server()
+//     await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+//     // console.log(await dss.apartment.getDevices())
+//     // expect(await dss.apartment.getDevices()).toHaveProperty('ok', true)
+// })
+
+test('turn on all lights', async () => {
+  const dss = new Server()
+    await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+    expect(await dss.apartment.setGroupValue(255, 1)).toHaveProperty('ok', true)
+})
 
 
