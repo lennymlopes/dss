@@ -117,7 +117,7 @@ class Server {
      */
     getDevices: async () => {
       let urlString = `${this.url}/json/apartment/getDevices?token=${this.sessionToken}`
-      const response = this.get(urlString)
+      const response = await this.get(urlString)
       return response.result
     },
     /**
@@ -325,9 +325,9 @@ class Server {
      */
 
     setValue: async (dsid, value) => {
-      const urlString = `${this.url}/json/device/callScene?token=${this.sessionToken}&dsid=${dsid}&value=${value}`
+      const urlString = `${this.url}/json/device/setValue?token=${this.sessionToken}&dsid=${dsid}&value=${value}`
 
-      return await get(urlString)
+      return await this.get(urlString)
     }
   }
 
