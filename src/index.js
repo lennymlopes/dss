@@ -1,7 +1,19 @@
 import got from 'got'
 
-export default class Server {
+/**
+ * interact with digitalstrom server
+ * @class 
+ * @classdesc test
+ * @example <caption>Connecting to a server and getting its name</caption>
+ * const dss = new Server()
+ * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+ * console.log(await dss.apartment.getName())
+ */
 
+class Server {
+  /**
+   * constructor
+   */
   constructor() {
     this.url = undefined
     this.appToken = undefined
@@ -42,7 +54,6 @@ export default class Server {
 
   /**
    * apartment functions
-   * @exports dss/apartment
    * @namespace apartment
    */
 
@@ -321,3 +332,5 @@ export default class Server {
   }
 
 }
+
+export default Server
