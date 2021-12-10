@@ -1,4 +1,4 @@
-import got from 'got'
+const got = require('got')
 
 /**
  * interact with digitalstrom server
@@ -333,4 +333,4 @@ class Server {
 
 }
 
-export default Server
+module.exports = Server

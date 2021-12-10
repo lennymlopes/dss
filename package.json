@@ -4,10 +4,9 @@
   "description": "interact with digitalSTROM server",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules --trace-warnings ./node_modules/.bin/jest",
+    "test": "node --trace-warnings ./node_modules/.bin/jest",
     "docs": "jsdoc src/index.js readme.md -c jsdoc.json"
   },
-  "type": "module",
   "author": "lennymlopes",
   "license": "ISC",
   "dependencies": {
