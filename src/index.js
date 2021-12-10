@@ -133,8 +133,8 @@ class Server {
       let urlString = `${this.url}/json/apartment/setValue?token=${this.sessionToken}&value=${value}`
       urlString = groupID ? urlString += `&groupID=${groupID}` : urlString
       urlString = groupName ? urlString += `&groupName=${groupName}` : urlString
-      const response = this.get(urlString)
-      return response.data
+      const response = await this.get(urlString)
+      return response
     }
 
   }
