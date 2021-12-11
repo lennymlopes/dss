@@ -75,12 +75,12 @@ class Server {
           rejectUnauthorized: false,
           port: 8080
       }
-      const data = []
+      let data = []
       await https.get(url, options, res => {
         res.setEncoding('utf8')
-        res.on('data', chunk => data.push(chunk))
+        res.on('data', chunk => data += chunk)
         res.on('error', e => reject(e.message))
-        res.on('end', () => resolve(JSON.parse(data.join())))
+        res.on('end', () => resolve(JSON.parse(data)))
       }) 
     })
   }
@@ -152,7 +152,7 @@ class Server {
       let urlString = `${this.url}/json/apartment/getStructure`
       urlString += `?token=${this.sessionToken}`
 
-      const response = this.get(urlString)
+      const response = await this.get(urlString)
       return response.result.apartment
     },
     /**
