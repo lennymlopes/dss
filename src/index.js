@@ -12,9 +12,11 @@ class Server {
   /**
    * constructor
    */
-  
-  constructor() {
-    this.url = undefined
+  /**
+   * @param  {string} url - server url
+   */
+  constructor(url) {
+    this.url = url
     this.appToken = undefined
     this.password = undefined
     this.sessionToken = undefined
@@ -24,20 +26,18 @@ class Server {
   /**
    * connect to a dss with either password or token
    * @param  {object} options 
-   * @param  {string} options.url
    * @param  {string} [options.appToken]
    * @param  {string} [options.password]
    * @return {string} this.sessionToken 
    * @example <caption>Connecting to a server with a application token</caption>
-   * const dss = new Server()
-   * await dss.connect({ url: process.env.DSS_URL, process.env.DSS_TOKEN })
+   * const dss = new Server(process.env.DSS_URL)
+   * await dss.connect({ appToken: process.env.DSS_TOKEN })
    * @example <caption>Connecting to a server with a password</caption>
-   * const dss = new Server()
-   * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+   * const dss = new Server(process.env.DSS_URL)
+   * await dss.connect({ password: 'dssadmin' })
    */
-  async connect ({url=null, appToken=null, password=null}={}) {
+  async connect ({appToken=null, password=null}={}) {
     
-    this.url = url
     this.appToken = appToken
     this.password = password
 
@@ -62,7 +62,7 @@ class Server {
    * @param {string} url - url to make request to
    * @return {object} response
    * @example <caption>Logging into the server</caption>
-   * const dss = new Server()
+   * const dss = new Server(process.env.DSS_URL)
    * let urlString = `${process.env.DSS_URL}/system/login?user=dssadmin`
    * urlString += `&password=${process.env.DSS_PASSWORD}`
    * await dss.get(urlString)
@@ -112,8 +112,8 @@ class Server {
      * @param {boolean} [force] - issue forced scene call
      * @return {object} 
      * @example <caption>Calling a apartment scene</caption>
-     * const dss = new Server()
-     * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: 'dssadmin' }))
      * await dss.apartment.callScene(5, 1)
      */
 
@@ -132,8 +132,8 @@ class Server {
      * @param {number} [groupID] - group id
      * @param {string} [groupName] - group name
      * @example <caption>Connecting to a server with a application token</caption>
-     * const dss = new Server()
-     * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: 'dssadmin' }))
      * await dss.apartment.undoScene(5, 1)
      */
     undoScene: async (sceneNumber, groupID = undefined, groupName = undefined) => {
