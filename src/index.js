@@ -60,7 +60,12 @@ class Server {
    * get request, needs to accept unauthorized certificates 
    * because of self signed certificate
    * @param {string} url - url to make request to
-   * @return {Object}
+   * @return {object} response
+   * @example <caption>Logging into the server</caption>
+   * const dss = new Server()
+   * let urlString = `${process.env.DSS_URL}/system/login?user=dssadmin`
+   * urlString += `&password=${process.env.DSS_PASSWORD}`
+   * await dss.get(urlString)
    */
 
 
@@ -106,10 +111,10 @@ class Server {
      * @param {string} [groupName] - group name
      * @param {boolean} [force] - issue forced scene call
      * @return {object} 
-     * @example <caption>Connecting to a server with a password</caption>
+     * @example <caption>Calling a apartment scene</caption>
      * const dss = new Server()
      * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
-     * await dss.apartment.callScene
+     * await dss.apartment.callScene(5, 1)
      */
 
     callScene: async (sceneNumber, groupID = undefined, groupName = undefined, force = undefined) => {
@@ -126,6 +131,10 @@ class Server {
      * @param {number} sceneNumber - scene number
      * @param {number} [groupID] - group id
      * @param {string} [groupName] - group name
+     * @example <caption>Connecting to a server with a application token</caption>
+     * const dss = new Server()
+     * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+     * await dss.apartment.undoScene(5, 1)
      */
     undoScene: async (sceneNumber, groupID = undefined, groupName = undefined) => {
       let urlString = `${this.url}/json/apartment/undoScene`
