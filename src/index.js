@@ -46,7 +46,7 @@ class Server {
     }
 
     if( this.appToken ) {
-      this.sessionToken = await this.system.loginApplication()
+      this.sessionToken = await this.system.loginApplication(this.appToken)
     } else if ( this.password) {
       this.sessionToken = await this.system.loginUser(this.password)
     } else {
@@ -235,6 +235,7 @@ class Server {
       urlString += `&password=${password}`
 
       const response = await this.get(urlString)
+      this.sessionToken = response.result.token
       return response.result.token
     },
 
@@ -244,7 +245,8 @@ class Server {
      */
 
     logoutUser: async () => {
-      this.get(`${this.url}/json/system/logout`)
+      this.sessionToken = undefined
+      return await this.get(`${this.url}/json/system/logout`)
     },
 
     /**
@@ -267,11 +269,12 @@ class Server {
      * enable application token
      * caller must be logged in
      * @memberof Server.system
+     * @param  {string} appToken - application token to enable
+     * @return {string}
      */
-
-    enableToken: async () => {
+    enableToken: async (appToken) => {
       let urlString = `${this.url}/json/system/enableToken`
-      urlString += `?applicationToken=${this.appToken}`
+      urlString += `?applicationToken=${appToken}`
       urlString += `&token=${this.sessionToken}`
 
       return await this.get(urlString)
@@ -283,9 +286,10 @@ class Server {
      * @memberof Server.system
      */
 
-    revokeToken: async () => {
+    revokeToken: async (appToken) => {
       let urlString = `${this.url}/json/system/revokeToken`
-      urlString += `?applicationToken=${this.sessionToken}`
+      urlString += `?applicationToken=${appToken}`
+      urlString += `&token=${this.sessionToken}`
 
       return await this.get(urlString)
 
@@ -296,9 +300,9 @@ class Server {
      * @memberof Server.system
      */
 
-    loginApplication: async () => {
+    loginApplication: async (appToken) => {
       let urlString = `${this.url}/json/system/loginApplication`
-      urlString += `?loginToken=${this.appToken}`
+      urlString += `?loginToken=${appToken}`
 
       const response = await this.get(urlString)
       return response.result.token
@@ -328,29 +332,6 @@ class Server {
 
       const response = await this.get(urlString)
       return response.result.value
-    },
-
-    /**
-     * set system state
-     * @memberof Server.state
-     * @param {string} name - state identifier
-     * @param {string} value - new value
-     * @param {string} [addon] - owner of state, 
-     * e.g. system-addon-user-defined-states
-     */
-
-    setState: async (name, value, addon = undefined) => {
-      let urlString = `${this.url}/json/state/set`
-      urlString += `?name=${name}&value=${value}`
-      urlString += `&token=${this.sessionToken}`
-
-      urlString = addon ? urlString += `&addon=${addon}` : urlString
-
-      try {
-        return await this.get(urlString)
-      } catch (e) {
-        return e
-      }
     }
   }
 
@@ -396,6 +377,23 @@ class Server {
       let urlString = `${this.url}/json/device/setValue`
       urlString += `?token=${this.sessionToken}`
       urlString += `&dsid=${dsid}&value=${value}`
+
+      return await this.get(urlString)
+    },
+
+    /**
+     * executes the "blink" function
+     * @memberof Server.device
+     * @param {string} dsid - device digitalstrom id
+     * @returns {object} response
+     * @example <caption>Blink device with id 32893</caption>
+     * await dss.device.blink("32893")
+     */
+
+    blink: async dsid => {
+      let urlString = `${this.url}/json/device/blink`
+      urlString += `?token=${this.sessionToken}`
+      urlString += `&dsid=${dsid}`
 
       return await this.get(urlString)
     }
