@@ -4,7 +4,7 @@ const https = require('https')
  * interact with digitalstrom server
  * @example <caption>Connecting to a server and getting its name</caption>
  * const dss = new Server()
- * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+ * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
  * console.log(await dss.apartment.getName())
  */
 
@@ -30,10 +30,10 @@ class Server {
    * @return {string} this.sessionToken 
    * @example <caption>Connecting to a server with a application token</caption>
    * const dss = new Server()
-   * await dss.connect({ url: process.env.DSS_URL, process.env.DSS_TOKEN }))
+   * await dss.connect({ url: process.env.DSS_URL, process.env.DSS_TOKEN })
    * @example <caption>Connecting to a server with a password</caption>
    * const dss = new Server()
-   * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+   * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
    */
   async connect ({url=null, appToken=null, password=null}={}) {
     
@@ -226,7 +226,7 @@ class Server {
      * returns session token
      * @memberof system
      * @param {string} url - server address
-     * @param {string} passwort - user password
+     * @param {string} password - user password
      * @param {string} user - user name, default is dssadmin
      */
 

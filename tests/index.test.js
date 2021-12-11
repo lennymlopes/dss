@@ -63,7 +63,8 @@ test('get all devices', async () => {
 test('turn on all lights', async () => {
   const dss = new Server()
     await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
-    expect(await dss.apartment.setGroupValue(255, 1)).toHaveProperty('ok', true)
+    expect(await dss.apartment.callScene(5, 1)).toHaveProperty('ok', true)
+    // expect(await dss.apartment.setGroupValue(255, 1)).toHaveProperty('ok', true)
 })
 
 test('turn off all lights', async () => {
