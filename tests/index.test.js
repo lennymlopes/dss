@@ -49,7 +49,9 @@ test('test Server.apartment.getStructure, get apartment structure', async () => 
   await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
   let structure = await dss.apartment.getStructure()
   // console.log(structure)
-  // expect(structure).toHaveProperty('ok', true)
+  expect(structure).toHaveProperty('clusters')
+  expect(structure).toHaveProperty('zones')
+  expect(structure).toHaveProperty('floors')
 })
 
 // test('throw error if url param is missing', async () => {
