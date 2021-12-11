@@ -1,4 +1,4 @@
-const got = require('got')
+const https = require('https')
 
 /**
  * interact with digitalstrom server
@@ -62,13 +62,22 @@ class Server {
    * @param {string} url - url to make request to
    * @return {Object}
    */
+
+
   async get (url) {
-    const options = { 
-      https: { 
-        rejectUnauthorized: false 
-      } 
-    }
-    return await got(url, options).json()
+    return new Promise ( async (resolve, reject) => {
+      const options = { 
+          rejectUnauthorized: false,
+          port: 8080
+      }
+      const data = []
+      await https.get(url, options, res => {
+        res.setEncoding('utf8')
+        res.on('data', chunk => data.push(chunk))
+        res.on('error', e => reject(e.message))
+        res.on('end', () => resolve(JSON.parse(data.join())))
+      }) 
+    })
   }
 
 

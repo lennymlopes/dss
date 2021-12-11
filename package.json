@@ -2,16 +2,17 @@
   "name": "dss",
   "version": "1.0.0",
   "description": "interact with digitalSTROM server",
+  "repository": {
+    "type": "git",
+    "url": "lennymlopes/dss"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "node --trace-warnings ./node_modules/.bin/jest",
+    "test": "jest",
     "docs": "jsdoc -c jsdoc.json"
   },
   "author": "lennymlopes",
   "license": "ISC",
-  "dependencies": {
-    "got": "^11.8.3"
-  },
   "devDependencies": {
     "better-docs": "^2.3.2",
     "dotenv": "^10.0.0",
