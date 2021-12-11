@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node --trace-warnings ./node_modules/.bin/jest",
-    "docs": "jsdoc src/index.js readme.md -c jsdoc.json"
+    "docs": "jsdoc -c jsdoc.json"
   },
   "author": "lennymlopes",
   "license": "ISC",
