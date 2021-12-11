@@ -34,31 +34,31 @@ test('throw error if password but no url', async () => {
 
 test('get apartment name', async () => {
   const dss = new Server()
-    console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+    await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
     let name = await dss.apartment.getName()
     expect(name).toBe('dSS')
 })
 
 test('call zone scene', async () => {
   const dss = new Server()
-    console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
-    expect(await dss.zone.callScene(10,17)).toHaveProperty('ok', true)
+  await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+  expect(await dss.zone.callScene(10, 5)).toHaveProperty('ok', true)
+  expect(await dss.zone.callScene(10, 0, undefined, undefined, true)).toHaveProperty('ok', true)
 })
 
 test('call apartment scene', async () => {
   const dss = new Server()
-    console.log(await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' }))
+    await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
     expect(await dss.apartment.callScene(72)).toHaveProperty('ok', true)
 })
 
-
-
-// test('get all devices', async () => {
-//   const dss = new Server()
-//     await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
-//     // console.log(await dss.apartment.getDevices())
-//     // expect(await dss.apartment.getDevices()).toHaveProperty('ok', true)
-// })
+test('get all devices', async () => {
+  const dss = new Server()
+    await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+    let devices = await dss.apartment.getDevices()
+    // console.log(devices[0])
+    // expect(await dss.apartment.getDevices()).toHaveProperty('ok', true)
+})
 
 test('turn on all lights', async () => {
   const dss = new Server()
@@ -66,4 +66,14 @@ test('turn on all lights', async () => {
     expect(await dss.apartment.setGroupValue(255, 1)).toHaveProperty('ok', true)
 })
 
+test('turn off all lights', async () => {
+  const dss = new Server()
+    await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+    expect(await dss.apartment.setGroupValue(0, 1)).toHaveProperty('ok', true)
+})
 
+test('turn off all devices', async () => {
+  const dss = new Server()
+    await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+    expect(await dss.apartment.setGroupValue(0)).toHaveProperty('ok', true)
+})
