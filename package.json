@@ -1,5 +1,5 @@
 {
-  "name": "dss",
+  "name": "@lennymlopes/dss",
   "version": "0.2.0",
   "description": "interact with digitalSTROM servers",
   "repository": {
