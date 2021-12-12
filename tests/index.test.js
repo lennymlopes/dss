@@ -197,8 +197,8 @@ test('test Server.device, get current presence state', async () => {
 
   let devices = await dss.apartment.getDevices()
 
-  let lights = devices.filter(device => {
-    return device.isPresent == true && device.groups.includes(1) && device.outputMode != 0
+  let lights = devices.filter(d => {
+    return d.isPresent && d.groups.includes(1) && d.outputMode != 0
   }).map(light => light.id)
 
   expect(await dss.device.callScene(lights[0], 5)).toHaveProperty('ok', true)

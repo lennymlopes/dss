@@ -3,8 +3,8 @@ const https = require('https')
 /**
  * interact with digitalstrom server
  * @example <caption>Connecting to a server and getting its name</caption>
- * const dss = new Server()
- * await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+ * const dss = new Server(process.env.DSS_URL)
+ * await dss.connect({ password: 'dssadmin' })
  * console.log(await dss.apartment.getName())
  */
 
@@ -96,6 +96,10 @@ class Server {
      * returns apartment name
      * @memberof Server.apartment
      * @return {string}
+     * @example <caption>Calling a apartment scene</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: 'dssadmin' }))
+     * console.log(await dss.apartment.getName())
      */
     getName: async () => {
       let urlString= `${this.url}/json/apartment/getName`
@@ -133,7 +137,7 @@ class Server {
      * @param {string} [groupName] - group name
      * @example <caption>Connecting to a server with a application token</caption>
      * const dss = new Server(process.env.DSS_URL)
-     * await dss.connect({ password: 'dssadmin' }))
+     * await dss.connect({ password: process.env.DSS_PASSWORD }))
      * await dss.apartment.undoScene(5, 1)
      */
     undoScene: async (sceneNumber, groupID = undefined, groupName = undefined) => {
@@ -147,6 +151,11 @@ class Server {
      * returns apartment structure,
      * includes detailed information about all zones, groups and devices.
      * @memberof Server.apartment
+     * @example <caption>Get apartment structure</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: process.env.DSS_PASSWORD }))
+     * let structure = await dss.apartment.getStructure()
+     * console.log(structure)
      */
     getStructure: async () => {
       let urlString = `${this.url}/json/apartment/getStructure`
@@ -158,6 +167,10 @@ class Server {
     /**
      * returns all devices,
      * @memberof Server.apartment
+     * @example <caption>Get apartment structure</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: process.env.DSS_PASSWORD }))
+     * let devices = await dss.apartment.getDevices()
      */
     getDevices: async () => {
       let urlString = `${this.url}/json/apartment/getDevices`
@@ -172,6 +185,10 @@ class Server {
      * @param {number} value - numerical value
      * @param {number} groupID - group id
      * @param {string} groupName - group name
+     * @example <caption>Set all lights to half power</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: process.env.DSS_PASSWORD }))
+     * await dss.apartment.setGroupValue(127, 1)
      */
 
     setGroupValue: async (value, groupID = undefined, groupName = undefined) => {
@@ -201,6 +218,10 @@ class Server {
      * @param {number} [groupID] - group id
      * @param {string} [groupName] - group name
      * @param {boolean} [force] - issue forced scene call
+     * @example <caption>Turn devices in zone 10 on</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: process.env.DSS_PASSWORD }))
+     * await dss.zone.callScene(10, 5)
      */
     callScene: async (id, sceneNumber, groupID = undefined, groupName = undefined, force = undefined) => {
       let urlString = `${this.url}/json/zone/callScene`
@@ -228,6 +249,9 @@ class Server {
      * @param {string} url - server address
      * @param {string} password - user password
      * @param {string} user - user name, default is dssadmin
+     * @example <caption>Get a session token with password</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * let token = await dss.system.loginUser(process.env.DSS_PASSWORD)
      */
 
     loginUser: async (password, user = 'dssadmin') => {
@@ -242,6 +266,9 @@ class Server {
     /**
      * destroys session, logs out user
      * @memberof Server.system
+     * @example <caption>Get a session token with password</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.system.logoutUser()
      */
 
     logoutUser: async () => {
@@ -255,6 +282,9 @@ class Server {
      * token needs to be approved by user
      * @memberof Server.system
      * @param {string} name - application name
+     * @example <caption>Create a new app</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * let appToken = await dss.system.getToken('your_app_name')
      */
 
     getToken: async name => {
@@ -271,6 +301,11 @@ class Server {
      * @memberof Server.system
      * @param  {string} appToken - application token to enable
      * @return {string}
+     * @example <caption>Enable new app</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * let appToken = await dss.system.getToken('your_app_name')
+     * await dss.connect({ password: process.env.DSS_PASSWORD })
+     * await dss.system.enableToken(appToken)
      */
     enableToken: async (appToken) => {
       let urlString = `${this.url}/json/system/enableToken`
@@ -284,6 +319,12 @@ class Server {
      * revoke application token
      * caller must be logged in
      * @memberof Server.system
+     * @example <caption>Revoke app token</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * let appToken = await dss.system.getToken('your_app_name')
+     * await dss.connect({ password: process.env.DSS_PASSWORD })
+     * await dss.system.enableToken(appToken)
+     * await dss.system.revokeToken(appToken)
      */
 
     revokeToken: async (appToken) => {
@@ -298,6 +339,9 @@ class Server {
     /**
      * create new session with application token
      * @memberof Server.system
+     * @example <caption>Create new session with valid app token</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.system.loginApplication(process.env.DSS_TOKEN)
      */
 
     loginApplication: async (appToken) => {
@@ -322,6 +366,10 @@ class Server {
      * @param {string} name - state identifier
      * @param {string} [addon] - owner of state, 
      * e.g. system-addon-user-defined-states
+     * @example <caption>Create new session with valid app token</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ appToken: process.env.DSS_TOKEN })
+     * let state = await dss.state.getState('presence')
      */
 
     getState: async (name, addon = undefined) => {
@@ -349,8 +397,9 @@ class Server {
      * @param {number} sceneNumber - scene number
      * @param {boolean} [force] - issue forced scene call
      * @returns {object} response
-     * @example <caption>Call scene 5 for device with id 32893</caption>
-     * await dss.device.callScene("32893", 5)
+     * @example <caption>Call scene 5 for device with 
+     * id 3504175fe000000000017ef3</caption>
+     * await dss.device.callScene("3504175fe000000000017ef3", 5)
      */
 
     callScene: async (dsid, sceneNumber, force = undefined) => {
@@ -369,8 +418,9 @@ class Server {
      * @param {string} dsid - device digitalstrom id
      * @param {number} value - numerical 8 bit value (0-255)
      * @returns {object} response
-     * @example <caption>Set output value to 200 for device with id 32893</caption>
-     * await dss.device.callScene("32893", 200)
+     * @example <caption>Set output value to 200 for device with 
+     * id 3504175fe000000000017ef3</caption>
+     * await dss.device.callScene("3504175fe000000000017ef3", 200)
      */
 
     setValue: async (dsid, value) => {
@@ -386,8 +436,9 @@ class Server {
      * @memberof Server.device
      * @param {string} dsid - device digitalstrom id
      * @returns {object} response
-     * @example <caption>Blink device with id 32893</caption>
-     * await dss.device.blink("32893")
+     * @example <caption>Blink device with 
+     * id 3504175fe000000000017ef3</caption>
+     * await dss.device.blink("3504175fe000000000017ef3")
      */
 
     blink: async dsid => {

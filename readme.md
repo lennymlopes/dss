@@ -14,11 +14,11 @@ Install dss with npm
 ## Usage
 ```javascript
 // create a new server
-const dss = new Server()
+const dss = new Server(process.env.DSS_URL)
 // connect via token
-await dss.connect({ url: process.env.DSS_URL, appToken: process.env.DSS_TOKEN })
+await dss.connect({ appToken: process.env.DSS_TOKEN })
 // or connect via password
-await dss.connect({ url: process.env.DSS_URL, password: 'dssadmin' })
+await dss.connect({ password: process.env.DSS_PASSWORD })
 // get the apartments name
 console.log(await dss.apartment.getName())
 // get all devices
