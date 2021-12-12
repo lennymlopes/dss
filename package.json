@@ -1,7 +1,7 @@
 {
   "name": "dss",
   "version": "0.1.0",
-  "description": "interact with digitalSTROM server",
+  "description": "interact with digitalSTROM servers",
   "repository": {
     "type": "git",
     "url": "lennymlopes/dss"
