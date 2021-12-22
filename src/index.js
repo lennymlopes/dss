@@ -261,6 +261,36 @@ class Server {
 
       return await this.get(urlString)
     },
+
+    /**
+     * undoes a zone scene
+     * @memberof Server.zone
+     * @param {number} id - zone id
+     * @param {number} sceneNumber - scene number
+     * @param {number} [groupID] - group id
+     * @param {string} [groupName] - group name
+     * @example <caption>Undo callScene 5</caption>
+     * const dss = new Server(process.env.DSS_URL)
+     * await dss.connect({ password: process.env.DSS_PASSWORD }))
+     * await dss.zone.undoScene(10, 5)
+     */
+    undoScene: async (
+      id,
+      sceneNumber,
+      groupID = undefined,
+      groupName = undefined
+    ) => {
+      let urlString = `${this.url}/json/zone/callScene`
+      urlString += `?token=${this.sessionToken}`
+      urlString += `&id=${id}&sceneNumber=${sceneNumber}`
+
+      urlString = groupID ? (urlString += `&groupID=${groupID}`) : urlString
+      urlString = groupName
+        ? (urlString += `&groupName=${groupName}`)
+        : urlString
+
+      return await this.get(urlString)
+    },
   }
 
   /**
@@ -432,6 +462,26 @@ class Server {
       urlString += `&dsid=${dsid}`
       urlString += `&sceneNumber=${sceneNumber}`
       urlString = force ? (urlString += `&force=${force}`) : urlString
+
+      return await this.get(urlString)
+    },
+
+    /**
+     * undoes a device scene
+     * @memberof Server.device
+     * @param {string} dsid - device digitalstrom id
+     * @param {number} sceneNumber - scene number
+     * @returns {object} response
+     * @example <caption>Undo scene 5 for device with
+     * id 3504175fe000000000017ef3</caption>
+     * await dss.device.undoScene("3504175fe000000000017ef3", 5)
+     */
+
+    undoScene: async (dsid, sceneNumber, force = undefined) => {
+      let urlString = `${this.url}/json/device/undoScene`
+      urlString += `?token=${this.sessionToken}`
+      urlString += `&dsid=${dsid}`
+      urlString += `&sceneNumber=${sceneNumber}`
 
       return await this.get(urlString)
     },

@@ -123,6 +123,15 @@ test('test Server.zone.callScene, turn on and off lights', async () => {
   ).toHaveProperty('ok', true)
 })
 
+test('test Server.zone.undoScene, turn on and off lights', async () => {
+  const dss = new Server(process.env.DSS_URL)
+  await dss.connect({
+    appToken: process.env.DSS_TOKEN,
+  })
+  expect(await dss.zone.callScene(10, 5)).toHaveProperty('ok', true)
+  expect(await dss.zone.undoScene(10, 5)).toHaveProperty('ok', true)
+})
+
 //-- Server.system -------------------------------------------------------------
 
 test('test Server.system.loginUser, get session token', async () => {
@@ -198,6 +207,7 @@ test('test Server.device, get current presence state', async () => {
     .map(light => light.id)
 
   expect(await dss.device.callScene(lights[0], 5)).toHaveProperty('ok', true)
+  expect(await dss.device.undoScene(lights[0], 5)).toHaveProperty('ok', true)
 })
 
 test('test Server.device, get current presence state', async () => {
