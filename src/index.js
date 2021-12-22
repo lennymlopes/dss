@@ -280,7 +280,7 @@ class Server {
       groupID = undefined,
       groupName = undefined
     ) => {
-      let urlString = `${this.url}/json/zone/callScene`
+      let urlString = `${this.url}/json/zone/undoScene`
       urlString += `?token=${this.sessionToken}`
       urlString += `&id=${id}&sceneNumber=${sceneNumber}`
 
