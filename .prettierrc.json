@@ -1,0 +1,8 @@
+{
+  "semi": false,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "auto_format_on_save": true,
+  "arrowParens": "avoid"
+}
