@@ -19,19 +19,19 @@ Install dss with npm
 
 ```javascript
 // create a new server
-const dss = new Server(process.env.DSS_URL);
+const dss = new Server(process.env.DSS_URL)
 // connect via token
-await dss.connect({ appToken: process.env.DSS_TOKEN });
+await dss.connect({ appToken: process.env.DSS_TOKEN })
 // or connect via password
-await dss.connect({ password: process.env.DSS_PASSWORD });
+await dss.connect({ password: process.env.DSS_PASSWORD })
 // get the apartments name
-console.log(await dss.apartment.getName());
+console.log(await dss.apartment.getName())
 // get all devices
-let devices = await dss.apartment.getDevices();
+let devices = await dss.apartment.getDevices()
 // turn all lights on
-await dss.apartment.callScene(5, 1);
+await dss.apartment.callScene(5, 1)
 // set apartment state to absent
-await dss.apartment.callScene(72);
+await dss.apartment.callScene(72)
 ```
 
 ## Running Tests
