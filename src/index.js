@@ -22,13 +22,12 @@ class Server {
     this.sessionToken = undefined
   }
 
-
   /**
    * connect to a dss with either password or token
-   * @param  {object} options 
+   * @param  {object} options
    * @param  {string} [options.appToken]
    * @param  {string} [options.password]
-   * @return {string} this.sessionToken 
+   * @return {string} this.sessionToken
    * @example <caption>Connecting to a server with a application token</caption>
    * const dss = new Server(process.env.DSS_URL)
    * await dss.connect({ appToken: process.env.DSS_TOKEN })
@@ -36,28 +35,27 @@ class Server {
    * const dss = new Server(process.env.DSS_URL)
    * await dss.connect({ password: 'dssadmin' })
    */
-  async connect ({appToken=null, password=null}={}) {
-    
+  async connect({ appToken = null, password = null } = {}) {
     this.appToken = appToken
     this.password = password
 
-    if(!this.url) {
+    if (!this.url) {
       throw new Error('Please provide a valid url.')
     }
 
-    if( this.appToken ) {
+    if (this.appToken) {
       this.sessionToken = await this.system.loginApplication(this.appToken)
-    } else if ( this.password) {
+    } else if (this.password) {
       this.sessionToken = await this.system.loginUser(this.password)
     } else {
-      throw new Error("Please provide a valid token or password.")
+      throw new Error('Please provide a valid token or password.')
     }
 
     return this.sessionToken
   }
 
   /**
-   * get request, needs to accept unauthorized certificates 
+   * get request, needs to accept unauthorized certificates
    * because of self signed certificate
    * @param {string} url - url to make request to
    * @return {object} response
@@ -68,30 +66,33 @@ class Server {
    * await dss.get(urlString)
    */
 
-
-  async get (url) {
-    return new Promise ( async (resolve, reject) => {
-      const options = { 
-          rejectUnauthorized: false,
-          port: 8080
+  async get(url) {
+    return new Promise(async (resolve, reject) => {
+      const options = {
+        rejectUnauthorized: false,
+        port: 8080,
       }
       let data = []
       await https.get(url, options, res => {
         res.setEncoding('utf8')
-        res.on('data', chunk => data += chunk)
+        res.on('data', chunk => (data += chunk))
         res.on('error', e => reject(e.message))
-        res.on('end', () => resolve(JSON.parse(data)))
-      }) 
+        res.on('end', () => {
+          let response = JSON.parse(data)
+          if (!response.ok || response.ok !== true) {
+            console.trace(response)
+          }
+          resolve(response)
+        })
+      })
     })
   }
-
 
   /**
    * apartment functions
    * @namespace Server.apartment
    */
   apartment = {
-
     /**
      * returns apartment name
      * @memberof Server.apartment
@@ -102,7 +103,7 @@ class Server {
      * console.log(await dss.apartment.getName())
      */
     getName: async () => {
-      let urlString= `${this.url}/json/apartment/getName`
+      let urlString = `${this.url}/json/apartment/getName`
       urlString += `?token=${this.sessionToken}`
       const response = await this.get(urlString)
       return response.result.name
@@ -114,19 +115,26 @@ class Server {
      * @param {number} [groupID] - group id
      * @param {string} [groupName] - group name
      * @param {boolean} [force] - issue forced scene call
-     * @return {object} 
+     * @return {object}
      * @example <caption>Calling a apartment scene</caption>
      * const dss = new Server(process.env.DSS_URL)
      * await dss.connect({ password: 'dssadmin' }))
      * await dss.apartment.callScene(5, 1)
      */
 
-    callScene: async (sceneNumber, groupID = undefined, groupName = undefined, force = undefined) => {
+    callScene: async (
+      sceneNumber,
+      groupID = undefined,
+      groupName = undefined,
+      force = undefined
+    ) => {
       let urlString = `${this.url}/json/apartment/callScene`
       urlString += `?token=${this.sessionToken}&sceneNumber=${sceneNumber}`
-      urlString = groupID ? urlString += `&groupID=${groupID}` : urlString
-      urlString = groupName ? urlString += `&groupName=${groupName}` : urlString
-      urlString = force ? urlString += `&force=${force}` : urlString
+      urlString = groupID ? (urlString += `&groupID=${groupID}`) : urlString
+      urlString = groupName
+        ? (urlString += `&groupName=${groupName}`)
+        : urlString
+      urlString = force ? (urlString += `&force=${force}`) : urlString
       return await this.get(urlString)
     },
     /**
@@ -140,11 +148,17 @@ class Server {
      * await dss.connect({ password: process.env.DSS_PASSWORD }))
      * await dss.apartment.undoScene(5, 1)
      */
-    undoScene: async (sceneNumber, groupID = undefined, groupName = undefined) => {
+    undoScene: async (
+      sceneNumber,
+      groupID = undefined,
+      groupName = undefined
+    ) => {
       let urlString = `${this.url}/json/apartment/undoScene`
       urlString += `?token=${this.sessionToken}&sceneNumber=${sceneNumber}`
-      urlString = groupID ? urlString += `&groupID=${groupID}` : urlString
-      urlString = groupName ? urlString += `&groupName=${groupName}` : urlString
+      urlString = groupID ? (urlString += `&groupID=${groupID}`) : urlString
+      urlString = groupName
+        ? (urlString += `&groupName=${groupName}`)
+        : urlString
       return this.get(urlString)
     },
     /**
@@ -191,17 +205,22 @@ class Server {
      * await dss.apartment.setGroupValue(127, 1)
      */
 
-    setGroupValue: async (value, groupID = undefined, groupName = undefined) => {
+    setGroupValue: async (
+      value,
+      groupID = undefined,
+      groupName = undefined
+    ) => {
       let urlString = `${this.url}/json/apartment/setValue`
       urlString += `?token=${this.sessionToken}&value=${value}`
 
-      urlString = groupID ? urlString += `&groupID=${groupID}` : urlString
-      urlString = groupName ? urlString += `&groupName=${groupName}` : urlString
+      urlString = groupID ? (urlString += `&groupID=${groupID}`) : urlString
+      urlString = groupName
+        ? (urlString += `&groupName=${groupName}`)
+        : urlString
 
       const response = await this.get(urlString)
       return response
-    }
-
+    },
   }
 
   /**
@@ -223,17 +242,25 @@ class Server {
      * await dss.connect({ password: process.env.DSS_PASSWORD }))
      * await dss.zone.callScene(10, 5)
      */
-    callScene: async (id, sceneNumber, groupID = undefined, groupName = undefined, force = undefined) => {
+    callScene: async (
+      id,
+      sceneNumber,
+      groupID = undefined,
+      groupName = undefined,
+      force = undefined
+    ) => {
       let urlString = `${this.url}/json/zone/callScene`
       urlString += `?token=${this.sessionToken}`
       urlString += `&id=${id}&sceneNumber=${sceneNumber}`
 
-      urlString = groupID ? urlString += `&groupID=${groupID}` : urlString
-      urlString = groupName ? urlString += `&groupName=${groupName}` : urlString
-      urlString = force ? urlString += `&force=${force}` : urlString
+      urlString = groupID ? (urlString += `&groupID=${groupID}`) : urlString
+      urlString = groupName
+        ? (urlString += `&groupName=${groupName}`)
+        : urlString
+      urlString = force ? (urlString += `&force=${force}`) : urlString
 
       return await this.get(urlString)
-    }
+    },
   }
 
   /**
@@ -254,8 +281,8 @@ class Server {
      * let token = await dss.system.loginUser(process.env.DSS_PASSWORD)
      */
 
-    loginUser: async (password, user = 'dssadmin') => {
-      let urlString = `${this.url}/json/system/login?user=${user}`
+    loginUser: async password => {
+      let urlString = `${this.url}/json/system/login?user=dssadmin`
       urlString += `&password=${password}`
 
       const response = await this.get(urlString)
@@ -307,7 +334,7 @@ class Server {
      * await dss.connect({ password: process.env.DSS_PASSWORD })
      * await dss.system.enableToken(appToken)
      */
-    enableToken: async (appToken) => {
+    enableToken: async appToken => {
       let urlString = `${this.url}/json/system/enableToken`
       urlString += `?applicationToken=${appToken}`
       urlString += `&token=${this.sessionToken}`
@@ -327,13 +354,12 @@ class Server {
      * await dss.system.revokeToken(appToken)
      */
 
-    revokeToken: async (appToken) => {
+    revokeToken: async appToken => {
       let urlString = `${this.url}/json/system/revokeToken`
       urlString += `?applicationToken=${appToken}`
       urlString += `&token=${this.sessionToken}`
 
       return await this.get(urlString)
-
     },
 
     /**
@@ -344,15 +370,14 @@ class Server {
      * await dss.system.loginApplication(process.env.DSS_TOKEN)
      */
 
-    loginApplication: async (appToken) => {
+    loginApplication: async appToken => {
       let urlString = `${this.url}/json/system/loginApplication`
       urlString += `?loginToken=${appToken}`
 
       const response = await this.get(urlString)
       return response.result.token
-    }   
+    },
   }
-
 
   /**
    * state functions
@@ -364,7 +389,7 @@ class Server {
      * get system state
      * @memberof Server.state
      * @param {string} name - state identifier
-     * @param {string} [addon] - owner of state, 
+     * @param {string} [addon] - owner of state,
      * e.g. system-addon-user-defined-states
      * @example <caption>Create new session with valid app token</caption>
      * const dss = new Server(process.env.DSS_URL)
@@ -376,13 +401,12 @@ class Server {
       let urlString = `${this.url}/json/state/get`
       urlString += `?token=${this.sessionToken}&name=${name}`
 
-      urlString = addon ? urlString += `&addon=${addon}` : urlString
+      urlString = addon ? (urlString += `&addon=${addon}`) : urlString
 
       const response = await this.get(urlString)
       return response.result.value
-    }
+    },
   }
-
 
   /**
    * device functions
@@ -397,7 +421,7 @@ class Server {
      * @param {number} sceneNumber - scene number
      * @param {boolean} [force] - issue forced scene call
      * @returns {object} response
-     * @example <caption>Call scene 5 for device with 
+     * @example <caption>Call scene 5 for device with
      * id 3504175fe000000000017ef3</caption>
      * await dss.device.callScene("3504175fe000000000017ef3", 5)
      */
@@ -407,7 +431,7 @@ class Server {
       urlString += `?token=${this.sessionToken}`
       urlString += `&dsid=${dsid}`
       urlString += `&sceneNumber=${sceneNumber}`
-      urlString = force ? urlString += `&force=${force}` : urlString
+      urlString = force ? (urlString += `&force=${force}`) : urlString
 
       return await this.get(urlString)
     },
@@ -418,7 +442,7 @@ class Server {
      * @param {string} dsid - device digitalstrom id
      * @param {number} value - numerical 8 bit value (0-255)
      * @returns {object} response
-     * @example <caption>Set output value to 200 for device with 
+     * @example <caption>Set output value to 200 for device with
      * id 3504175fe000000000017ef3</caption>
      * await dss.device.callScene("3504175fe000000000017ef3", 200)
      */
@@ -436,7 +460,7 @@ class Server {
      * @memberof Server.device
      * @param {string} dsid - device digitalstrom id
      * @returns {object} response
-     * @example <caption>Blink device with 
+     * @example <caption>Blink device with
      * id 3504175fe000000000017ef3</caption>
      * await dss.device.blink("3504175fe000000000017ef3")
      */
@@ -447,11 +471,8 @@ class Server {
       urlString += `&dsid=${dsid}`
 
       return await this.get(urlString)
-    }
+    },
   }
-
 }
 
 module.exports = Server
-
-
